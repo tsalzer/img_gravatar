@@ -1,0 +1,42 @@
+= Gravatar
+
+$Id$
+
+A simple plugin adding the +gravatar+ image capability to ActionViews.
+
+== What is a Gravatar?
+
+A gravatar is a globally recognized avatar. It is an image hosted on the site
+http://site.gravatar.com, uploaded by the user and referred to on base of
+an eMail address. News on gravatar can be found at http://blog.gravatar.com.
+
+Each gravatar image can be rated with respect to its content being suiteable to
+audience.
+
+== Usage
+
+To use a gravatar on your system, your view needs the eMail address of the
+individual to be displayed. The most simple case is like this:
+
+  <p>
+    <%= gravatar('me@email.com') %> That's me.
+  </p>
+
+This will render the image of the person known under the eMail me@email.com
+in your browser. If there is no person known with this name, it will render
+the Gravatar logo.
+
+A more complex szenario would include a size definition, and an alt image tag:
+
+  <p>
+    <%= gravetar('me@email.com', { :size => 40, :alt => "That's me." }) %>
+  </p>
+
+This would render a downsized image of 40x40 with the alt-tag "That's me.".
+
+For a complete description of available parameters see
+Gravatar::InstanceMethods#gravatar in the Gravatar::InstanceMethods.
+
+=== Configuration Options
+
+You can modify the following aspects of the gravatar
