@@ -1,8 +1,11 @@
-= Gravatar
+= Image Gravatar
 
-$Id$
+A simple plugin adding the +img_gravatar+ image link helper to ActionViews.
 
-A simple plugin adding the +gravatar+ image capability to ActionViews.
+== Install
+
+  gem install tsalzer-img_gravatar --source http://gems.github.com
+
 
 == What is a Gravatar?
 
@@ -19,7 +22,7 @@ To use a gravatar on your system, your view needs the eMail address of the
 individual to be displayed. The most simple case is like this:
 
   <p>
-    <%= gravatar('me@email.com') %> That's me.
+    <%= img_gravatar('me@email.com') %> That's me.
   </p>
 
 This will render the image of the person known under the eMail me@email.com
@@ -29,7 +32,7 @@ the Gravatar logo.
 A more complex szenario would include a size definition, and an alt image tag:
 
   <p>
-    <%= gravetar('me@email.com', { :size => 40, :alt => "That's me." }) %>
+    <%= img_gravetar('me@email.com', { :size => 40, :alt => "That's me." }) %>
   </p>
 
 This would render a downsized image of 40x40 with the alt-tag "That's me.".
@@ -39,4 +42,8 @@ Gravatar::InstanceMethods#gravatar in the Gravatar::InstanceMethods.
 
 === Configuration Options
 
-You can modify the following aspects of the gravatar
+You can modify the following aspects of the displayed gravatar image:
+ * :alt          - the alternative text for this image
+ * :default_url  - the default URL for this gravatar
+ * :size         - the requested gravatar size
+ * :rating       - the requested maximum rating
