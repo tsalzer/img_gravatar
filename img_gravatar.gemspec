@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.description = %q{Add a img_gravatar helper to ActiveView.}
   s.email = %q{till.salzer@googlemail.com}
   s.extra_rdoc_files = ["lib/img_gravatar.rb", "README.rdoc", "tasks/img_gravatar_tasks.rake"]
-  s.files = ["init.rb", "install.rb", "lib/img_gravatar.rb", "Manifest", "Rakefile", "rdoc/classes/ImgGravatar/InstanceMethods.html", "rdoc/files/lib/img_gravatar_rb.html", "rdoc/files/README_rdoc.html", "README.rdoc", "tasks/img_gravatar_tasks.rake", "test/img_gravatar_test.rb", "uninstall.rb", "img_gravatar.gemspec"]
+  s.files = ["img_gravatar.gemspec", "init.rb", "install.rb", "lib/img_gravatar.rb", "Manifest", "Rakefile", "README.rdoc", "tasks/img_gravatar_tasks.rake", "test/img_gravatar_test.rb", "uninstall.rb"]
   s.has_rdoc = true
   s.homepage = %q{http://github.com/tsalzer/img_gravatar}
   s.rdoc_options = ["--line-numbers", "--inline-source", "--title", "Img_gravatar", "--main", "README.rdoc"]
