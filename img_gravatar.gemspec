@@ -2,11 +2,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{img_gravatar}
-  s.version = "0.0.0"
+  s.version = "0.0.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 1.2") if s.respond_to? :required_rubygems_version=
   s.authors = ["Till Salzer"]
-  s.date = %q{2009-01-17}
+  s.date = %q{2009-01-20}
   s.description = %q{Add a img_gravatar helper to ActiveView.}
   s.email = %q{till.salzer@googlemail.com}
   s.extra_rdoc_files = ["lib/img_gravatar.rb", "README.rdoc", "tasks/img_gravatar_tasks.rake"]
