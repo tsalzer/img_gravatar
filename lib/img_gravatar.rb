@@ -33,6 +33,52 @@ module ImgGravatar #:nodoc:
   mattr_accessor :default_rating
   @@default_rating = 'g'
   
+  ############################################################################
+  # get the Gravatar image.
+  # options:
+  #   :alt          - the alternative text for this image
+  #   :default_url  - the default URL for this gravatar
+  #   :size         - the requested gravatar size
+  #   :rating       - the requested maximum rating
+  def self.link_gravatar(email, opts={})
+    # the defaults
+    alt = nil
+    alt = opts[:alt] if opts[:alt]
+    
+    if alt then
+      "<img src=\"%s\" alt=\"%s\" />" % [image_url(email, opts), alt]
+    else
+      "<img src=\"%s\" />" % image_url(email, opts)
+    end
+  end
+  
+  ############################################################################
+  # get the default Gravatar image.
+  # options:
+  #   :default_url  - the default URL for this gravatar
+  #   :size         - the requested gravatar size
+  #   :rating       - the requested maximum rating
+  def self.image_url(email, opts={})
+    appender = '?'
+    
+    # now, load infos from options
+    default_img_url = check_default_opt(opts[:default_url])
+    size = check_size_opt(opts[:size] )
+    rating = check_rating_opt(opts[:rating])
+    
+    query = nil
+    query = "s=%s" % size if size
+    query = query ? "%s&r=%s" % [query, rating] : "r=%s" % rating if rating
+    query = query ? "%s&d=%s" % [query, default_img_url] : "d=%s" % default_img_url if default_img_url
+    
+    query = URI.escape(query) if query
+    
+    #uri = URI::HTTP.new(Gravatar.gravatar_base_url)
+    uri = URI::HTTP.build(:host => ImgGravatar.gravatar_host,
+      :path => "/avatar/%s" % MD5.md5(email.downcase.strip),
+      :query => query)
+  end
+  
   # Methods injected in all ActionView classes.
   module Base #:nodoc:
     def self.included(mod) #:nodoc:
@@ -51,70 +97,30 @@ module ImgGravatar #:nodoc:
   
   module InstanceMethods
     ############################################################################
-    # get the default Gravatar image.
-    # options:
-    #   :alt          - the alternative text for this image
-    #   :default_url  - the default URL for this gravatar
-    #   :size         - the requested gravatar size
-    #   :rating       - the requested maximum rating
+    # get the Gravatar image.
+    # See ImgGravatar.link_gravatar for options.
     def img_gravatar(email, opts={})
-      # the defaults
-      alt = nil
-      appender = '?'
-      
-      # now, load infos from options
-      alt = opts[:alt] if opts[:alt]
-      default_img_url = check_default_opt(opts[:default_url])
-      size = check_size_opt(opts[:size] )
-      rating = check_rating_opt(opts[:rating])
-      
-      query = nil
-      query = "s=%s" % size if size
-      query = query ? "%s&r=%s" % [query, rating] : "r=%s" % rating if rating
-      query = query ? "%s&d=%s" % [query, default_img_url] : "d=%s" % default_img_url if default_img_url
-      
-      query = URI.escape(query) if query
-      
-      #uri = URI::HTTP.new(Gravatar.gravatar_base_url)
-      uri = URI::HTTP.build(:host => ImgGravatar.gravatar_host,
-        :path => "/avatar/%s" % MD5.md5(email.downcase.strip),
-        :query => query)
-
-      if alt then
-        "<img src=\"%s\" alt=\"%s\" />" % [uri, alt]
-      else
-        "<img src=\"%s\" />" % uri
-      end
-      
-    end
-
-    
-    private
-    
-    def check_size_opt(size)
-      if size and size >= ImgGravatar.minimum_size and size <= ImgGravatar.maximum_size
-        return size
-      end
-    end
-    
-    def check_rating_opt(rating)
-      if rating and ['g', 'r', 'x'].include?(rating)
-        return rating
-      end
-    end
-    
-    def check_default_opt(dflt)
-      if dflt
-        return dflt
-      end
+      return ::ImgGravatar.link_gravatar(email, opts)
     end
   end
+
+  private
+  
+  def self.check_size_opt(size)
+    return size if size and size >= ImgGravatar.minimum_size and size <= ImgGravatar.maximum_size
+  end
+  
+  def self.check_rating_opt(rating)
+    return rating if rating and ['g', 'r', 'x'].include?(rating)
+  end
+  
+  def self.check_default_opt(dflt)
+    return dflt if dflt
+  end
+
 end
 
 # inject into ActionView.
-#ActionView::Base.class_eval do
-#  include Gravatar::Base
-#end
 ActionView::Base.send :include, ImgGravatar::InstanceMethods
 
 
