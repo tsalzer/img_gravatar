@@ -47,3 +47,29 @@ You can modify the following aspects of the displayed gravatar image:
  * :default_url  - the default URL for this gravatar
  * :size         - the requested gravatar size
  * :rating       - the requested maximum rating
+
+== Building a new Gem
+
+To create a new gem, you need to install the echoe gem (see
+http://blog.evanweaver.com/files/doc/fauna/echoe/files/README.html).
+Next, edit the Rakefile to reflect your changes, then run:
+
+  rake clobber        # remove generated stuff for a clean manifest
+  rake manifest       # only needed if you changed the file set
+  rake build_gemspec  # update the gemspec
+
+Now, you can either publish the gem, or build a gem package. See rake -T for
+available targets.
+
+== License
+
+The img_gravatar gem comes to you under the MIT License. You should find the
+license text in the file MIT-LICENSE in the gem folder.
+
+The img_gravatar gem is not affiliated with the Gravatar service. Usage terms
+of the Gravatar service should be looked up at http://gravatar.com.
+
+Please note that changes to the Gravatar API or their terms of service or the
+cease of Gravatar service may result in breaking the img_gravatar gem
+functionality. This is considered out of the responsibility of the author of
+the img_gravatar gem.
