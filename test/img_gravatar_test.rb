@@ -49,7 +49,7 @@ class ImgGravatarTest < Test::Unit::TestCase
     myview = TestView.new
     (1..512).each do |size|
       link_url = myview.img_gravatar(@@ref_mail, {:size => size})
-      assert_match(/^<img src="#{@@base_url}\/[a-z0-9]{32}\?s=#{size}\" \/>/, link_url)
+      assert_match(/^<img src="#{@@base_url}\/[a-z0-9]{32}\?s=#{size}\" size="#{size}" \/>/, link_url)
     end
   end
   
@@ -57,7 +57,7 @@ class ImgGravatarTest < Test::Unit::TestCase
     myview = TestView.new
     (-10..0).each do |size|
       link_url = myview.img_gravatar(@@ref_mail, {:size => size})
-      assert_match(/^<img src="#{@@base_url}\/[a-z0-9]{32}\" \/>/, link_url)
+      assert_match(/^<img src="#{@@base_url}\/[a-z0-9]{32}\" size="#{size}" \/>/, link_url)
     end
   end
   
@@ -65,7 +65,7 @@ class ImgGravatarTest < Test::Unit::TestCase
     myview = TestView.new
     (513..10000).each do |size|
       link_url = myview.img_gravatar(@@ref_mail, {:size => size})
-      assert_match(/^<img src="#{@@base_url}\/[a-z0-9]{32}\" \/>/, link_url)
+      assert_match(/^<img src="#{@@base_url}\/[a-z0-9]{32}\" size="#{size}" \/>/, link_url)
     end
   end
   
