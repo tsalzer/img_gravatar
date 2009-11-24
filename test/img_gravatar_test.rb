@@ -71,10 +71,9 @@ class ImgGravatarTest < Test::Unit::TestCase
   
   def test_default_image_encoding
     myview = TestView.new
-    unencoded = "http://example.com/images/example.jpg"
-    encoded = 'http%3A%2F%2Fexample.com%2Fimages%2Fexample.jpg'
-    link_url = myview.img_gravatar(@@ref_mail, {:default_url => unencoded})
-    assert_match(/^<img src="#{@@base_url}\/[a-z0-9]{32}\?d=#{encoded}\" \/>/, link_url)
+    default_url = "http://example.com/images/example.jpg"
+    link_url = myview.img_gravatar(@@ref_mail, {:default_url => default_url})
+    assert_match(/^<img src="#{@@base_url}\/[a-z0-9]{32}\?d=#{default_url}\" \/>/, link_url)
   end
   
   def test_default_image_specials
