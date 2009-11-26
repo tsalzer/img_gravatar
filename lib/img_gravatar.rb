@@ -36,22 +36,17 @@ module ImgGravatar #:nodoc:
   ############################################################################
   # get the Gravatar image.
   # options:
-  #   :alt          - the alternative text for this image
+  #   :alt          - the alternative text for this image (img attribute)
   #   :default_url  - the default URL for this gravatar
-  #   :size         - the requested gravatar size
+  #   :size         - the requested gravatar size (img attribute, gravatar-attribute)
   #   :rating       - the requested maximum rating
   def self.link_gravatar(email, opts={})
     # the defaults
     tag_options = {}
-    tag_options[:alt] = opts[:alt] if opts[:alt]
-    tag_options[:size] = opts[:size] if opts[:size]
-    
-    attributes = nil
-    if tag_options.size > 0
-      attributes = tag_options.collect { |key, value| "#{key}=\"#{value}\"" }.join(" ")
-    end
+    [:alt, :size].each {|opt| tag_options[opt] =opts[opt] if opts[opt]}
 
-    if attributes then
+    unless tag_options.empty?
+      attributes = tag_options.collect {|key, value| "#{key}=\"#{value}\"" }.join(" ")
       "<img src=\"%s\" %s />" % [image_url(email, opts), attributes]
     else
       "<img src=\"%s\" />" % image_url(email, opts)
