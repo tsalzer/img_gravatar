@@ -1,16 +1,51 @@
-# Rakefile for img_gravatar
 require 'rubygems'
 require 'rake'
-require 'echoe'
 
-Echoe.new('img_gravatar', '0.1.1') do |p|
-  p.description = "Add a img_gravatar helper to ActiveView."
-  p.url = "http://github.com/tsalzer/img_gravatar"
-  p.author = "Till Salzer"
-  p.email = "till.salzer@googlemail.com"
-  p.ignore_pattern = ["tmp/*", "script/*", "rdoc/*", "pkg/*", "gravatar.tmproj"]
-  p.development_dependencies = []
-  p.rdoc_pattern = /^(lib|bin|tasks|ext)|^README.rdoc|^CHANGELOG|^TODO|^MIT-LICENSE|^COPYING$/
+begin
+  require 'jeweler'
+  Jeweler::Tasks.new do |gem|
+    gem.name = "img_gravatar"
+    gem.summary = %Q{Gravatar image helper}
+    gem.description = %Q{Add a img_gravatar helper to ActiveView.}
+    gem.email = "till.salzer@googlemail.com"
+    gem.homepage = "http://github.com/tsalzer/minimapper"
+    gem.authors = ["Till Salzer"]
+    gem.add_development_dependency 'rspec', '>= 1.2.9'
+    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
+  end
+
+rescue LoadError
+  puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
 end
 
-Dir["#{File.dirname(__FILE__)}/tasks/*.rake"].sort.each { |ext| load ext }
+require 'spec/rake/spectask'
+Spec::Rake::SpecTask.new(:spec) do |spec|
+  spec.libs << 'lib' << 'spec'
+  spec.spec_files = FileList['spec/**/*_spec.rb']
+end
+
+Spec::Rake::SpecTask.new(:rcov) do |spec|
+  spec.libs << 'lib' << 'spec'
+  spec.pattern = 'spec/**/*_spec.rb'
+  spec.rcov = true
+end
+
+
+
+task :default => :spec
+
+require 'rake/rdoctask'
+Rake::RDocTask.new do |rdoc|
+  if File.exist?('VERSION.yml')
+    config = YAML.load(File.read('VERSION.yml'))
+    version = "#{config[:major]}.#{config[:minor]}.#{config[:patch]}"
+  else
+    version = ""
+  end
+
+  rdoc.rdoc_dir = 'rdoc'
+  rdoc.title = "img_gravatar #{version}"
+  rdoc.rdoc_files.include('README*')
+  rdoc.rdoc_files.include('lib/**/*.rb')
+end
+

@@ -1,12 +1,17 @@
-require 'md5'
+DIGEST_INTERFACE = begin
+  require 'md5'
+  :ruby18
+rescue LoadError
+  require 'digest/md5'
+  :ruby19
+end
+
 require 'uri'
 require 'action_view'
 
-# = Gravatar
+# = ImgGravatar
 # 
 # Adds the +gravatar+ method to ActionViews.
-#
-# $Id$
 module ImgGravatar #:nodoc:
   mattr_reader :gravatar_host
   @@gravatar_host = 'www.gravatar.com'
@@ -76,10 +81,22 @@ module ImgGravatar #:nodoc:
     
     #uri = URI::HTTP.new(Gravatar.gravatar_base_url)
     uri = URI::HTTP.build(:host => ImgGravatar.gravatar_host,
-      :path => "/avatar/%s" % MD5.md5(email.downcase.strip),
+      :path => "/avatar/%s" % encode_md5(email),
       :query => query)
   end
-  
+
+  def self.encode_md5(email)
+    value = email.downcase.strip
+    case DIGEST_INTERFACE
+      when :ruby18
+        return MD5.md5(value)
+      when :ruby19
+        return Digest::MD5.hexdigest(value)
+      else
+        raise "unknown Ruby Digest interface."
+    end
+  end
+
   # Methods injected in all ActionView classes.
   module Base #:nodoc:
     def self.included(mod) #:nodoc:
