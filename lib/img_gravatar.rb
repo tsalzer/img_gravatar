@@ -40,41 +40,42 @@ module ImgGravatar #:nodoc:
     end
 
     protected
-      def validate_options
-        %w(rating size).each { |option| send("validate_#{option}") }
+
+    def validate_options
+      %w(rating size).each { |option| send("validate_#{option}") }
+    end
+
+    def validate_rating
+      unless options[:rating].nil? || %w(g r x).include?(options[:rating])
+        raise InvalidRating.new
       end
-      
-      def validate_rating
-        unless options[:rating].nil? || %w(g r x).include?(options[:rating])
-          raise InvalidRating.new
-        end
+    end
+
+    def validate_size
+      return if options[:size].nil?
+
+      size = options[:size]
+      if size < ImgGravatar.minimum_size || size > ImgGravatar.maximum_size
+        raise InvalidSize.new
+      end
+    end
+
+    def image_path
+      "/avatar/%s" % ImgGravatar.encode_md5(email)
+    end
+
+    def query_string
+      query_options = {}
+      { "s" => :size,
+        "d" => :default_img,
+        "r" => :rating }.each do |key, value|
+        query_options[key] = options[value] if options[value]
       end
 
-      def validate_size
-        return if options[:size].nil?
-
-        size = options[:size]
-        if size < ImgGravatar.minimum_size || size > ImgGravatar.maximum_size
-          raise InvalidSize.new
-        end
+      if query_options.size > 0
+        query_options.collect { |key, value| "#{key}=#{value}" }.join("&")
       end
-
-      def image_path
-        "/avatar/%s" % ImgGravatar.encode_md5(email)
-      end
-
-      def query_string
-        query_options = {}
-        { "s" => :size,
-          "d" => :default_img,
-          "r" => :rating }.each do |key, value|
-          query_options[key] = options[value] if options[value]
-        end
-        
-        if query_options.size > 0
-          query_options.collect { |key, value| "#{key}=#{value}" }.join("&")
-        end
-      end
+    end
   end
 
   include ActionView::Helpers::AssetTagHelper
@@ -205,7 +206,7 @@ module ImgGravatar #:nodoc:
 
   def self.check_size_opt(size)
     return size if size and size >= ImgGravatar.minimum_size and size <= ImgGravatar.maximum_size
-end
+  end
 
   def self.check_rating_opt(rating)
     return rating if rating and ['g', 'r', 'x'].include?(rating)
