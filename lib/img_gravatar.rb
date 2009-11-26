@@ -12,7 +12,7 @@ require 'action_view'
 # = ImgGravatar
 # 
 # Adds the +gravatar+ method to ActionViews.
-module ImgGravatar #:nodoc:
+module ImgGravatar
   mattr_reader :gravatar_host
   @@gravatar_host = 'www.gravatar.com'
   # gravatar.com base URL.
@@ -86,6 +86,9 @@ module ImgGravatar #:nodoc:
       :query => query)
   end
 
+  # encode an EMail for Gravatar.
+  # This will basically take any string, strip is, and hash the result
+  # using MD5.
   def self.encode_md5(email)
     value = email.downcase.strip
     case DIGEST_INTERFACE
@@ -113,7 +116,8 @@ module ImgGravatar #:nodoc:
       end
     end
   end
-  
+
+  # Methods available in ActionView.
   module InstanceMethods
     ############################################################################
     # get the Gravatar image.

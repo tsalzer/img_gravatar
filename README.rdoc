@@ -4,7 +4,11 @@ A simple plugin adding the +img_gravatar+ image link helper to ActionViews.
 
 == Install
 
-  gem install tsalzer-img_gravatar --source http://gems.github.com
+The gem is hosted on http://gemcutter.org, which is the default Ruby gem
+hoster at this time (November 2009). All you need to install the latest
+version is run the following command:
+
+  gem install img_gravatar
 
 
 == What is a Gravatar?
@@ -13,8 +17,9 @@ A gravatar is a globally recognized avatar. It is an image hosted on the site
 http://site.gravatar.com, uploaded by the user and referred to on base of
 an eMail address. News on gravatar can be found at http://blog.gravatar.com.
 
-Each gravatar image can be rated with respect to its content being suiteable to
-audience.
+Each gravatar image can be rated with respect to its content being suitable
+for a given audience. You might want to use the rating feature if you run a
+public site.
 
 == Usage
 
@@ -50,7 +55,7 @@ You can modify the following aspects of the displayed gravatar image:
 
 == Building a new Gem
 
-To create a new gem, you need to install the echoe gem (see
+To create a new gem, you need to install the jeweler gem (see
 http://blog.evanweaver.com/files/doc/fauna/echoe/files/README.html).
 Next, edit the Rakefile to reflect your changes, then run:
 
@@ -60,6 +65,11 @@ Next, edit the Rakefile to reflect your changes, then run:
 
 Now, you can either publish the gem, or build a gem package. See rake -T for
 available targets.
+
+== Ruby 1.9
+
+ImgGravatar version 0.2.0 and above runs on Ruby 1.9; older version will work
+only on Ruby 1.8.
 
 == License
 

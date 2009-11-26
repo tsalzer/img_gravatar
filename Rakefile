@@ -11,6 +11,7 @@ begin
     gem.homepage = "http://github.com/tsalzer/minimapper"
     gem.authors = ["Till Salzer", "Jon Wood"]
     gem.add_development_dependency 'rspec', '>= 1.2.9'
+    gem.add_development_dependency 'rcov', '>= 0.9.6'
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
 
@@ -43,9 +44,10 @@ Rake::RDocTask.new do |rdoc|
     version = ""
   end
 
-  rdoc.rdoc_dir = 'rdoc'
+  rdoc.rdoc_dir = 'doc'
   rdoc.title = "img_gravatar #{version}"
   rdoc.rdoc_files.include('README*')
+  rdoc.rdoc_files.include('MIT-LICENSE')
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
