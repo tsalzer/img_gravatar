@@ -9,7 +9,7 @@ begin
     gem.description = %Q{Add a img_gravatar helper to ActiveView.}
     gem.email = "till.salzer@googlemail.com"
     gem.homepage = "http://github.com/tsalzer/minimapper"
-    gem.authors = ["Till Salzer"]
+    gem.authors = ["Till Salzer", "Jon Wood"]
     gem.add_development_dependency 'rspec', '>= 1.2.9'
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end

@@ -38,7 +38,7 @@ A more complex szenario would include a size definition, and an alt image tag:
 This would render a downsized image of 40x40 with the alt-tag "That's me.".
 
 For a complete description of available parameters see
-Gravatar::InstanceMethods#gravatar in the Gravatar::InstanceMethods.
+ImgGravatar::InstanceMethods#gravatar in the ImgGravatar::InstanceMethods.
 
 === Configuration Options
 
