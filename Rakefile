@@ -10,6 +10,7 @@ begin
     gem.email = "till.salzer@googlemail.com"
     gem.homepage = "http://github.com/tsalzer/img_gravatar"
     gem.authors = ["Till Salzer", "Jon Wood"]
+    gem.add_dependency 'actionpack'
     gem.add_development_dependency 'rspec', '>= 1.2.9'
     gem.add_development_dependency 'rcov', '>= 0.9.6'
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings

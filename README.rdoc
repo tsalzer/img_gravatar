@@ -1,6 +1,9 @@
 = Image Gravatar
 
 A simple plugin adding the +img_gravatar+ image link helper to ActionViews.
+The plugin is meant for Ruby on Rails and does <tt>require 'actionpack'</tt>
+to work.
+
 
 == Install
 
@@ -9,6 +12,11 @@ hoster at this time (November 2009). All you need to install the latest
 version is run the following command:
 
   gem install img_gravatar
+
+The latest version of img_gravatar can be found at
+http://github.com/tsalzer/img_gravatar
+
+Please use the issue tracker there for any bug reports.
 
 
 == What is a Gravatar?
@@ -20,6 +28,7 @@ an eMail address. News on gravatar can be found at http://blog.gravatar.com.
 Each gravatar image can be rated with respect to its content being suitable
 for a given audience. You might want to use the rating feature if you run a
 public site.
+
 
 == Usage
 
@@ -43,7 +52,9 @@ A more complex szenario would include a size definition, and an alt image tag:
 This would render a downsized image of 40x40 with the alt-tag "That's me.".
 
 For a complete description of available parameters see
-ImgGravatar::InstanceMethods#gravatar in the ImgGravatar::InstanceMethods.
+<tt>ImgGravatar::InstanceMethods#img_gravatar</tt> in the
+<tt>ImgGravatar::InstanceMethods</tt> module.
+
 
 === Configuration Options
 
@@ -53,23 +64,58 @@ You can modify the following aspects of the displayed gravatar image:
  * :size         - the requested gravatar size
  * :rating       - the requested maximum rating
 
-== Building a new Gem
+The alt and size information will be reflected in the image tag.
+
+The size of the image is limited by gravatar.com to a maximum of 512 pixel
+each side. This code will fallback to default size if the requested size
+is larger than 512 pixel, or smaller than 1 pixel. (It might be argued that
+a 1-pixel-gravatar is quite useless, but you have to draw the line somewhere.
+Besides, gravatar.com tells us pixel size 1 is legal.)
+
+Note: The size attribute is not really required to be set here, since the
+actual image will be rendered by gravatar.com and we cannot really control
+which image size will be delivered. However, we will tell the browser how to
+scale the image.
+
+
+== Development
 
 To create a new gem, you need to install the jeweler gem (see
-http://blog.evanweaver.com/files/doc/fauna/echoe/files/README.html).
-Next, edit the Rakefile to reflect your changes, then run:
+http://github.com/technicalpickles/jeweler/). Usually you just have to run
+  gem install jeweler
 
-  rake clobber        # remove generated stuff for a clean manifest
-  rake manifest       # only needed if you changed the file set
+Then you may check the remaining dependencies with
+  rake check_dependencies:development
+
+See <tt>rake -T</tt> for available targets.
+
+
+== Building a new Gem
+
+Building a new gem is easy since Jeweler, just run
   rake build_gemspec  # update the gemspec
+  rake install        # build and install the actual gem
 
-Now, you can either publish the gem, or build a gem package. See rake -T for
-available targets.
 
-== Ruby 1.9
+== Ruby 1.9 Compatibility
 
-ImgGravatar version 0.2.0 and above runs on Ruby 1.9; older version will work
-only on Ruby 1.8.
+ImgGravatar version 0.2.0 and above runs on Ruby 1.9, Ruby 1.8 and JRuby 1.4.0;
+older version will work only on Ruby 1.8 (not tested on JRuby, failed on
+Ruby 1.9).
+
+
+== Bugs
+
+If you encounter bugs in img_gravatar, please use the issue tracker at
+http://github.com/tsalzer/img_gravatar/issues
+
+
+== Alternatives
+
+There are lots of other Gravatar plugins out there; find some Ruby on Rails
+plugins at http://en.gravatar.com/site/implement/rails. Of course I encourage
+you to use and improve this plugin. :)
+
 
 == License
 
