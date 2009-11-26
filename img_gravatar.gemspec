@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{img_gravatar}
-  s.version = "0.2.0"
+  s.version = "0.2.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Till Salzer", "Jon Wood"]
@@ -31,7 +31,7 @@ Gem::Specification.new do |s|
      "tasks/img_gravatar_tasks.rake",
      "uninstall.rb"
   ]
-  s.homepage = %q{http://github.com/tsalzer/minimapper}
+  s.homepage = %q{http://github.com/tsalzer/img_gravatar}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
   s.rubygems_version = %q{1.3.5}
