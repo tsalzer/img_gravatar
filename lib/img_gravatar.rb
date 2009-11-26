@@ -48,7 +48,8 @@ module ImgGravatar #:nodoc:
   def self.link_gravatar(email, opts={})
     # the defaults
     tag_options = {}
-    [:alt, :size].each {|opt| tag_options[opt] =opts[opt] if opts[opt]}
+    tag_options[:alt] =opts[:alt]   if opts[:alt]
+    tag_options[:size] =opts[:size] if opts[:size] && (opts[:size] >= 1 && opts[:size] <= 512)
 
     unless tag_options.empty?
       attributes = tag_options.collect {|key, value| "#{key}=\"#{value}\"" }.join(" ")

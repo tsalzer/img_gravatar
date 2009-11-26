@@ -38,7 +38,7 @@ describe ImgGravatar, "ActionView integration" do
   [0, -1 -10, -65535, -65536, 513, 640, 1024, 65535, 65536, 10000000].each do |size|
     it "should generate a default URL if the illegal size #{size} is given" do
       link_url = subject.img_gravatar(REF_MAIL, {:size => size})
-      link_url.should =~ /^<img src="#{BASE_URL}\/[a-z0-9]{32}\" " \/>/
+      link_url.should =~ /^<img src="#{BASE_URL}\/[a-z0-9]{32}\" \/>/
     end
   end
 
