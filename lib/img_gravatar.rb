@@ -7,12 +7,78 @@ rescue LoadError
 end
 
 require 'uri'
+# TODO: try to remove action view. We don't need it.
 require 'action_view'
 
 # = ImgGravatar
 # 
 # Adds the +gravatar+ method to ActionViews.
-module ImgGravatar
+module ImgGravatar #:nodoc:
+  class InvalidRating < RuntimeError; end
+  class InvalidSize < RuntimeError; end
+  
+  class Gravatar
+    attr_accessor :email
+    attr_accessor :options
+
+    def initialize(email, options = {})
+      self.email = email
+      self.options = options
+
+      validate_options
+    end
+
+    def image_url
+      URI::HTTP.build(:host => ImgGravatar.gravatar_host,
+                      :path => image_path,
+                      :query => query_string).to_s
+    end
+    alias :to_s :image_url
+    
+    def image_tag
+      
+    end
+
+    protected
+      def validate_options
+        %w(rating size).each { |option| send("validate_#{option}") }
+      end
+      
+      def validate_rating
+        unless options[:rating].nil? || %w(g r x).include?(options[:rating])
+          raise InvalidRating.new
+        end
+      end
+
+      def validate_size
+        return if options[:size].nil?
+
+        size = options[:size]
+        if size < ImgGravatar.minimum_size || size > ImgGravatar.maximum_size
+          raise InvalidSize.new
+        end
+      end
+
+      def image_path
+        "/avatar/%s" % ImgGravatar.encode_md5(email)
+      end
+
+      def query_string
+        query_options = {}
+        { "s" => :size,
+          "d" => :default_img,
+          "r" => :rating }.each do |key, value|
+          query_options[key] = options[value] if options[value]
+        end
+        
+        if query_options.size > 0
+          query_options.collect { |key, value| "#{key}=#{value}" }.join("&")
+        end
+      end
+  end
+
+  include ActionView::Helpers::AssetTagHelper
+  
   mattr_reader :gravatar_host
   @@gravatar_host = 'www.gravatar.com'
   # gravatar.com base URL.
@@ -20,24 +86,32 @@ module ImgGravatar
   mattr_reader :gravatar_base_url
   @@gravatar_base_url = "http://#{@@gravatar_host}/avatar"
   
-  # default image URL. Default is +/img/no_gravatar.png+.
-  mattr_accessor :default_img_url
-  @@default_img_url = '/img/no_gravatar.png'
-  
   mattr_reader :minimum_size
   @@minimum_size = 1
   mattr_reader :maximum_size
   @@maximum_size = 512
-  
-  # Default size of the image in pixel. Default is +80+.
-  mattr_accessor :default_size
-  @@default_size = 80
   
   # default rating.
   # Valid values are +g+, +r+, +x+, default is +g+.
   mattr_accessor :default_rating
   @@default_rating = 'g'
   
+  ############################################################################
+  # get the Gravatar image.
+  # options:
+  #   :alt          - the alternative text for this image (img attribute)
+  #   :default_url  - the default URL for this gravatar
+  #   :size         - the requested gravatar size (img attribute, gravatar-attribute)
+  #   :rating       - the requested maximum rating
+  def self.jb_link_gravatar(email, opts={})
+    # the defaults
+    tag_options = {}
+    tag_options[:alt] = opts[:alt] if opts[:alt]
+    tag_options[:size] = opts[:size] if opts[:size]
+
+    image_tag(image_url(email, opts), tag_options)
+  end
+
   ############################################################################
   # get the Gravatar image.
   # options:
@@ -128,15 +202,15 @@ module ImgGravatar
   end
 
   private
-  
+
   def self.check_size_opt(size)
     return size if size and size >= ImgGravatar.minimum_size and size <= ImgGravatar.maximum_size
-  end
-  
+end
+
   def self.check_rating_opt(rating)
     return rating if rating and ['g', 'r', 'x'].include?(rating)
   end
-  
+
   def self.check_default_opt(dflt)
     return dflt if dflt
   end
