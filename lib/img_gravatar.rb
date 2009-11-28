@@ -1,11 +1,4 @@
-DIGEST_INTERFACE = begin
-  require 'md5'
-  :ruby18
-rescue LoadError
-  require 'digest/md5'
-  :ruby19
-end
-
+require 'digest/md5'
 require 'uri'
 # TODO: try to remove action view. We don't need it.
 require 'action_view'
@@ -157,25 +150,10 @@ module ImgGravatar #:nodoc:
     
     #uri = URI::HTTP.new(Gravatar.gravatar_base_url)
     uri = URI::HTTP.build(:host => ImgGravatar.gravatar_host,
-      :path => "/avatar/%s" % encode_md5(email),
+      :path => "/avatar/%s" % Digest::MD5.hexdigest(email.downcase.strip),
       :query => query)
   end
-
-  # encode an EMail for Gravatar.
-  # This will basically take any string, strip is, and hash the result
-  # using MD5.
-  def self.encode_md5(email)
-    value = email.downcase.strip
-    case DIGEST_INTERFACE
-      when :ruby18
-        return MD5.md5(value)
-      when :ruby19
-        return Digest::MD5.hexdigest(value)
-      else
-        raise "unknown Ruby Digest interface."
-    end
-  end
-
+  
   # Methods injected in all ActionView classes.
   module Base #:nodoc:
     def self.included(mod) #:nodoc:
