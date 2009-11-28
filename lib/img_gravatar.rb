@@ -54,7 +54,7 @@ module ImgGravatar #:nodoc:
     end
 
     def image_path
-      "/avatar/%s" % ImgGravatar.encode_md5(email)
+      "/avatar/%s" % Digest::MD5.hexdigest(email.downcase.strip)
     end
 
     def query_string
