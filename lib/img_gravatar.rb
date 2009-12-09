@@ -1,36 +1,28 @@
 require 'digest/md5'
 require 'uri'
-require 'action_view'
 
 # = ImgGravatar
 # 
-# Adds the +gravatar+ method to ActionViews.
+# Adds the +img_gravatar+ method to ActionViews. 
 module ImgGravatar
-  mattr_reader :gravatar_host
-  @@gravatar_host = 'www.gravatar.com'
-  # gravatar.com base URL.
-  # This is +http://www.gravatar.com/avatar/+.
-  mattr_reader :gravatar_base_url
-  @@gravatar_base_url = "http://#{@@gravatar_host}/avatar"
-  
+  # Host to use for Gravatars. This is always +www.gravatar.com+.
+  GRAVATAR_HOST = 'www.gravatar.com'
+  # gravatar.com base-URL. This is +http://www.gravatar.com/avatar/+.
+  GRAVATAR_BASE_URL = "http://#{GRAVATAR_HOST}/avatar"
   # default image URL. Default is +/img/no_gravatar.png+.
-  mattr_accessor :default_img_url
-  @@default_img_url = '/img/no_gravatar.png'
-  
-  mattr_reader :minimum_size
-  @@minimum_size = 1
-  mattr_reader :maximum_size
-  @@maximum_size = 512
-  
-  # Default size of the image in pixel. Default is +80+.
-  mattr_accessor :default_size
-  @@default_size = 80
-  
-  # default rating.
-  # Valid values are +g+, +r+, +x+, default is +g+.
-  mattr_accessor :default_rating
-  @@default_rating = 'g'
-  
+  DEFAULT_IMG_URL = '/img/no_gravatar.png'
+  # Minimum possible size for a Gravatar. This is 1 pixel as specified by gravatar.com.
+  MINIMUM_SIZE = 1
+  # Maxmum possible size for a Gravatar. This is 512 pixel as specified by gravatar.com.
+  MAXIMUM_SIZE = 512
+  # Default size for a Gravatar. This is 80 pixel as specified by gravatar.com.
+  DEFAULT_SIZE = 80
+  # Possible ratings.
+  # TODO: Check gravatar.com for current ratings.
+  RATINGS = ['g', 'r', 'x']
+  # Default rating. This is the first possible Rating.
+  DEFAULT_RATING = RATINGS.first
+
   ############################################################################
   # get the Gravatar image.
   # options:
@@ -41,8 +33,8 @@ module ImgGravatar
   def self.link_gravatar(email, opts={})
     # the defaults
     tag_options = {}
-    tag_options[:alt] =opts[:alt]   if opts[:alt]
-    tag_options[:size] =opts[:size] if opts[:size] && (opts[:size] >= 1 && opts[:size] <= 512)
+    tag_options[:alt]  =opts[:alt]  if opts[:alt]
+    tag_options[:size] =opts[:size] if opts[:size] && (opts[:size] >= MINIMUM_SIZE && opts[:size] <= MAXIMUM_SIZE)
 
     unless tag_options.empty?
       attributes = tag_options.collect {|key, value| "#{key}=\"#{value}\"" }.join(" ")
@@ -63,7 +55,7 @@ module ImgGravatar
     
     # now, load infos from options
     default_img_url = check_default_opt(opts[:default_url])
-    size = check_size_opt(opts[:size] )
+    size = check_size_opt(opts[:size])
     rating = check_rating_opt(opts[:rating])
     
     query = nil
@@ -73,8 +65,7 @@ module ImgGravatar
     
     query = URI.escape(query) if query
     
-    #uri = URI::HTTP.new(Gravatar.gravatar_base_url)
-    uri = URI::HTTP.build(:host => ImgGravatar.gravatar_host,
+    URI::HTTP.build(:host => GRAVATAR_HOST,
       :path => "/avatar/%s" % Digest::MD5.hexdigest(email.downcase.strip),
       :query => query)
   end
@@ -108,20 +99,24 @@ module ImgGravatar
   private
   
   def self.check_size_opt(size)
-    return size if size and size >= ImgGravatar.minimum_size and size <= ImgGravatar.maximum_size
+    size and size >= MINIMUM_SIZE and size <= MAXIMUM_SIZE ? size : nil
   end
   
   def self.check_rating_opt(rating)
-    return rating if rating and ['g', 'r', 'x'].include?(rating)
+   rating and RATINGS.include?(rating) ? rating : nil
   end
   
   def self.check_default_opt(dflt)
-    return dflt if dflt
+    #TODO: what do we need this for?
+    dflt if dflt
   end
 
 end
 
 # inject into ActionView.
-ActionView::Base.send :include, ImgGravatar::InstanceMethods
-
-
+begin
+  require 'action_view'
+  ActionView::Base.send :include, ImgGravatar::InstanceMethods
+rescue LoadError
+  # So we have not ActionView. That's ok, if we just need the ImgGravatar functionality.
+end
