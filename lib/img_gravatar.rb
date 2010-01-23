@@ -66,10 +66,14 @@ module ImgGravatar
     query = URI.escape(query) if query
     
     URI::HTTP.build(:host => GRAVATAR_HOST,
-      :path => "/avatar/%s" % Digest::MD5.hexdigest(email.downcase.strip),
+      :path => "/avatar/%s" % encode_email(email),
       :query => query)
   end
-  
+
+  def self.encode_email(email)
+    Digest::MD5.hexdigest(email.downcase.strip)
+  end
+
   # Methods injected in all ActionView classes.
   module Base #:nodoc:
     def self.included(mod) #:nodoc:
