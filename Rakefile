@@ -11,13 +11,24 @@ begin
     gem.homepage = "http://github.com/tsalzer/img_gravatar"
     gem.authors = ["Till Salzer", "Jon Wood"]
     gem.add_dependency 'actionpack'
-    gem.add_development_dependency 'rspec', '>= 1.2.9'
-    gem.add_development_dependency 'rcov', '>= 0.9.6'
+    gem.add_development_dependency 'cucumber', '>= 0.6.2'
+    gem.add_development_dependency 'rspec', '>= 1.3.0'
+    gem.add_development_dependency 'rcov', '>= 0.9.7'
     # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
 
 rescue LoadError
-  puts "Jeweler (or a dependency) not available. Install it with: sudo gem install jeweler"
+  puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
+end
+
+begin
+  require 'cucumber/rake/task'
+  Cucumber::Rake::Task.new(:features)
+  task :features => :check_dependencies
+rescue LoadError
+  task :features do
+    abort "Cucumber is not available. In order to run features, you must: sudo gem install cucumber"
+  end
 end
 
 require 'spec/rake/spectask'
